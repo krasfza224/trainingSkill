@@ -11,6 +11,7 @@ public class CreateMap : MonoBehaviour
 {
 
     public Camera mainCamera;
+    public GameObject sizeMapContent;
     public GameObject block;
     GameObject head;
     public Material headMaterial, tailMaterial;
@@ -20,7 +21,7 @@ public class CreateMap : MonoBehaviour
 
     GameObject showInPutSizeMap;
     public int scoreCount;
-    public TMP_Text scoreText;
+    public TMP_Text result;
     public TMP_Text scorePointText;
 
     //public GameObject sizeMapContent;
@@ -61,19 +62,19 @@ public class CreateMap : MonoBehaviour
         //isAlive = true;
 
 
-        StartCoroutine(DrawMap());
-       
+        //StartCoroutine(DrawMap());
 
+        mainCamera.orthographicSize = 10;
 
-        //restartButton.onClick.AddListener(restart);
-        //createSizeButton.onClick.AddListener(() =>{
-        //    Debug.Log("selectd sizemap");
-        //    calculateSizeMap();
-        //});
+        restartButton.onClick.AddListener(restart);
+        createSizeButton.onClick.AddListener(() =>
+        {
+            calculateSizeMap();
+        });
     }
     private void calculateSizeMap()
     {
-        Debug.Log("calulate Map");
+        sizeMapContent.SetActive(false);
         int SX = Convert.ToInt32(sizeMapX.text);
         int SY = Convert.ToInt32(sizeMapX.text);
         getSizeMap(SX, SY);
@@ -83,7 +84,6 @@ public class CreateMap : MonoBehaviour
 
     private void getSizeMap(int x, int y)
     {
-        Debug.Log("getSizeMap");
         xSize = x;
         ySize = y;
         startGame();
@@ -93,7 +93,6 @@ public class CreateMap : MonoBehaviour
 
     private void startGame()
     {
-        Debug.Log("startGame");
         timeBetweenMovement = 0.5f;
         //drawMap();
         dir = Vector2.right;
@@ -103,7 +102,6 @@ public class CreateMap : MonoBehaviour
         block.SetActive(false);
         isAlive = true;
 
-      
     }
 
     private Vector2 getRandomPos()
@@ -184,7 +182,7 @@ public class CreateMap : MonoBehaviour
     {
         isAlive = false;
         gameOverUI.SetActive(true);
-        scorePointText.text = scoreCount.ToString();
+        result.text = scoreCount.ToString();
 
     }
 
@@ -195,100 +193,129 @@ public class CreateMap : MonoBehaviour
       
     }
 
-   //public void Score()
-   // {
-   //     scoreCount += 1;
-   //     scoreText.text = scoreCount.ToString();
-
-   // }
-
      void Update()
     {
-        //if (Input.GetKey(KeyCode.DownArrow)){
-        //    dir = Vector2.down;
-        //}else if (Input.GetKey(KeyCode.UpArrow)){
-        //    dir = Vector2.up;
-        //}else if (Input.GetKey(KeyCode.LeftArrow)){
-        //    dir = Vector2.left;
-        //}else if (Input.GetKey(KeyCode.RightArrow)){
-        //    dir = Vector2.right;
-        //}
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            dir = Vector2.down;
+        }
+        else if (Input.GetKey(KeyCode.UpArrow))
+        {
+            dir = Vector2.up;
+        }
+        else if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            dir = Vector2.left;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            dir = Vector2.right;
+        }
 
-        //if(xSize == 0 && ySize == 0)
-        //{
-        //    Debug.Log("not intput sizemap");
+        if (xSize == 0 && ySize == 0)
+        {
+          
 
-        //}
-        //else
-        //{
-        //    Debug.Log("Run");
-        //    passedTime += Time.deltaTime;
-        //    if (timeBetweenMovement < passedTime && isAlive)
-        //    {
-        //        passedTime = 0;
-        //        Vector3 newPosition = head.GetComponent<Transform>().position + new Vector3(dir.x, dir.y, 0);
+        }
+        else
+        {
+            passedTime += Time.deltaTime;
+            if (timeBetweenMovement < passedTime && isAlive)
+            {
+                passedTime = 0;
+                Vector3 newPosition = head.GetComponent<Transform>().position + new Vector3(dir.x, dir.y, 0);
 
-        //        if (newPosition.x >= xSize / 2)
-        //        {
-        //            newPosition.x = -xSize / 2 + 1;
-        //        }
-        //        else if (newPosition.x <= -xSize / 2)
-        //        {
-        //            newPosition.x = (xSize / 2) - 1;
-        //        }
-        //        else if (newPosition.y >= ySize / 2)
-        //        {
-        //            newPosition.y = -ySize / 2 + 1;
-        //        }
-        //        else if (newPosition.y <= -ySize / 2)
-        //        {
-        //            newPosition.y = (ySize / 2) - 1;
-        //        }
+                if (newPosition.x >= xSize / 2)
+                {
+                    newPosition.x = -xSize / 2 + 1;
+                }
+                else if (newPosition.x <= -xSize / 2)
+                {
+                    newPosition.x = (xSize / 2) - 1;
+                }
+                else if (newPosition.y >= ySize / 2)
+                {
+                    newPosition.y = -ySize / 2 + 1;
+                }
+                else if (newPosition.y <= -ySize / 2)
+                {
+                    newPosition.y = (ySize / 2) - 1;
+                }
 
 
-        //        //Check if head eat tail mean 
-        //        foreach (var item in tail)
-        //        {
-        //            if (item.transform.position == newPosition)
-        //            {
-        //                gameOver();
+                //Check if head eat tail mean 
+                foreach (var item in tail)
+                {
+                    if (item.transform.position == newPosition)
+                    {
+                        gameOver();
 
-        //            }
-        //        }
+                    }
+                }
 
-        //        if (newPosition.x == food.transform.position.x && newPosition.y == food.transform.position.y) // check growing snake after 
-        //        {
-        //            GameObject newTile = Instantiate(block);
-        //            newTile.SetActive(true);
-        //            newTile.transform.position = food.transform.position;
-        //            DestroyImmediate(food);
-        //            head.GetComponent<MeshRenderer>().material = tailMaterial;
-        //            tail.Add(head);
-        //            head = newTile;
-        //            head.GetComponent<MeshRenderer>().material = headMaterial;
+                if (newPosition.x == food.transform.position.x && newPosition.y == food.transform.position.y) // check growing snake after 
+                {
+                    GameObject newTile = Instantiate(block);
+                    newTile.SetActive(true);
+                    newTile.transform.position = food.transform.position;
+                    DestroyImmediate(food);
+                    head.GetComponent<MeshRenderer>().material = tailMaterial;
+                    tail.Add(head);
+                    head = newTile;
+                    head.GetComponent<MeshRenderer>().material = headMaterial;
 
-        //            scorePointText.text = "Point: " + tail.Count;
-        //            spawnFood();
+                    scorePointText.text = "Point: " + tail.Count;
+                    scoreCount += 1;
+                    spawnFood();
+                    AddSpeedMovement();
 
-        //        }
+                }
 
-        //        if (tail.Count == 0)
-        //        {
-        //            head.transform.position = newPosition;
-        //        }
-        //        else
-        //        {
-        //            head.GetComponent<MeshRenderer>().material = tailMaterial;
-        //            tail.Add(head);
-        //            head = tail[0];
-        //            head.GetComponent<MeshRenderer>().material = headMaterial;
-        //            tail.RemoveAt(0);
-        //            head.transform.position = newPosition;
-        //        }
-        //    }
-        //}
-        
+                if (tail.Count == 0)
+                {
+                    head.transform.position = newPosition;
+                }
+                else
+                {
+                    head.GetComponent<MeshRenderer>().material = tailMaterial;
+                    tail.Add(head);
+                    head = tail[0];
+                    head.GetComponent<MeshRenderer>().material = headMaterial;
+                    tail.RemoveAt(0);
+                    head.transform.position = newPosition;
+                }
+            }
+        }
 
+
+    }
+
+    private void AddSpeedMovement()
+    {
+       if(tail.Count > 5)
+        {
+            timeBetweenMovement = 0.4f;
+        }
+       
+       if (tail.Count > 10)
+        {
+            timeBetweenMovement = 0.35f;
+        }
+
+        if (tail.Count > 15)
+        {
+            timeBetweenMovement = 0.2f;
+        }
+
+        if (tail.Count > 20)
+        {
+            timeBetweenMovement = 0.1f;
+        }
+
+        if (tail.Count > 35)
+        {
+            timeBetweenMovement = 0.07f;
+        }
     }
 
 
