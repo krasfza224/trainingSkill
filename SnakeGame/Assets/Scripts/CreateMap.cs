@@ -24,7 +24,7 @@ public class CreateMap : MonoBehaviour
     public TMP_Text result;
     public TMP_Text scorePointText;
 
-    //public GameObject sizeMapContent;
+   
     public int maxWidth;
     public int maxHight;
 
@@ -38,9 +38,6 @@ public class CreateMap : MonoBehaviour
     public TMP_InputField sizeMapX;
     public TMP_InputField sizeMapY;
 
-  
-
-
     public int xSize;
     public int ySize;
 
@@ -48,7 +45,9 @@ public class CreateMap : MonoBehaviour
 
     public Button restartButton;
     public Button createSizeButton;
- 
+    public TMP_Text lastResult;
+
+
 
     private void Start()
     {
@@ -183,9 +182,12 @@ public class CreateMap : MonoBehaviour
         isAlive = false;
         gameOverUI.SetActive(true);
         result.text = scoreCount.ToString();
+        lastResult.text = "Last Result: " + scoreCount.ToString();
+        
 
     }
 
+  
 
     public void restart()
     {
